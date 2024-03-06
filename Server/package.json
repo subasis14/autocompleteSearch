@@ -1,0 +1,15 @@
+{
+  "name": "Server",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "concurrently \"vite\" \"node server.ts\""
+  },
+  "keywords": [],
+  "author": "subasis14",
+  "license": "ISC",
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}

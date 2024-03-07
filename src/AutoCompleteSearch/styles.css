@@ -1,63 +1,60 @@
 .experienced-component {
-    margin: 0 auto;
-  }
-  
-  .search-input {
-    width: 100%;
-    padding: 10px;
-    font-size: 16px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-  }
-  
-  .suggestions-list {
-    list-style: none;
-    padding: 0;
-    margin-top: 5px;
-  }
-  
-  .suggestions-list li {
-    padding: 5px 10px;
-    cursor: pointer;
-  }
-  
-  .suggestions-list li:hover {
-    background-color: #f0f0f0;
-  }
-  
-  .action-button {
-    display: block;
-    width: 100%;
-    padding: 10px;
-    margin-top: 10px;
-    background-color: #007bff;
-    color: #fff;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-  }
-  
-  .action-button:hover {
-    background-color: #0056b3;
-  }
+  margin: 0 auto;
+}
+button[disabled] {
+  color: #999;
+  background-color: #ccc;
+}
+.search-input {
+  width: 100%;
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
 
-  .App {
-    font-family: sans-serif;
-    text-align: center;
-  }
-  
-  .grid-container {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 20px;
-    padding: 20px;
-  }
-  .card {
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    padding: 20px;
-    text-align: center;
-    box-shadow: 0px 4px 8px red;
-  }
-  
-  
+.suggestions-list {
+  list-style: none;
+  padding: 0;
+  margin-top: 5px;
+}
+
+.suggestions-list li {
+  padding: 5px 10px;
+  cursor: pointer;
+}
+
+.suggestions-list li:hover {
+  background-color: #f0f0f0;
+}
+
+.action-button {
+  display: block;
+  width: 100%;
+  padding: 10px;
+  margin-top: 10px;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.App {
+  font-family: sans-serif;
+  text-align: center;
+}
+
+.grid-container {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  padding: 20px;
+}
+.card {
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 20px;
+  text-align: center;
+  box-shadow: 0px 4px 8px red;
+}

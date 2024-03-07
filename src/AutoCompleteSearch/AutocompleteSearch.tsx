@@ -14,9 +14,10 @@ const ExperiencedComponent: React.FC = () => {
   const [suggestions, setSuggestions] = useState<AutoCompleteSearchDataProps[]>(
     []
   );
-  const [selectedItem, setSelectedItem] = useState<SuggestionListItemProps[]>(
-    []
-  );
+  const [selectedItem, setSelectedItem] = useState<SuggestionListItemProps>({});
+  const [isDisabled, setIsDisabled] = useState(true);
+
+  const [cardItem, setCardItem] = useState<SuggestionListItemProps[]>([]);
   const { data, FetchApi } = useFetchInstance();
   const dispatch = useDispatch();
   const { payload } = useSelector((state) => state.search);
@@ -34,7 +35,6 @@ const ExperiencedComponent: React.FC = () => {
   }, [data]);
 
   const fetchSuggestions = (searchTerm: string) => {
-    console.log(payload?.summaries);
     const mockSuggestions: AutoCompleteSearchDataProps[] = payload?.summaries;
 
     const filteredSuggestions: AutoCompleteSearchDataProps[] =
@@ -72,28 +72,34 @@ const ExperiencedComponent: React.FC = () => {
       (item: AuthorDataProps) => item.book_id === id
     )[0].author;
 
-    setSelectedItem((prevItems) => [
-      ...prevItems,
-      {
-        book_title: book_title,
-        book_summary: book_Summary,
-        book_author: boook_author,
-      },
-    ]);
-    setSuggestions([]);
+    setSelectedItem({
+      book_title: book_title,
+      book_summary: book_Summary,
+      book_author: boook_author,
+    });
   };
 
   const handleButtonClick = (): void => {
-    console.log("Button clicked!");
+    const { book_author, book_summary, book_title } = selectedItem;
+    setCardItem((prevItems) => [
+      ...prevItems,
+      {
+        book_title: book_title,
+        book_summary: book_summary,
+        book_author: book_author,
+      },
+    ]);
+    setSuggestions([]);
+    setSelectedItem({});
   };
-
+ 
   return (
     <div className="experienced-component">
       <div className="grid-container">
-        {selectedItem?.map((item: SuggestionListItemProps) => {
+        {cardItem?.map((item: SuggestionListItemProps, index: number) => {
           return (
             <>
-              <div className="card">
+              <div className="card" key={index}>
                 {item.book_title}
                 <div>{item.book_summary}</div>
                 <div>{item.book_author}</div>
@@ -123,7 +129,11 @@ const ExperiencedComponent: React.FC = () => {
           )
         )}
       </ul>
-      <button className="action-button" onClick={handleButtonClick}>
+      <button
+        className="action-button"
+        onClick={handleButtonClick}
+        disabled={Object.keys(selectedItem).length === 0}
+      >
         Submit
       </button>
     </div>

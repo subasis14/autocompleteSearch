@@ -3,10 +3,11 @@ export interface AutoCompleteSearchDataProps {
   summary: string;
 }
 
-export interface SuggestionListItemProps {
-  book_title?: string;
-  book_summary?: string;
-  book_author?: string;
+export interface cardListItemProps {
+  id: string;
+  book_title: string;
+  book_summary: string;
+  book_author: string;
 }
 
 export interface AuthorDataProps {

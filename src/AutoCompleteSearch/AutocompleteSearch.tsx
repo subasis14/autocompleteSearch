@@ -5,19 +5,19 @@ import { searchData } from "../State/SearchSlice";
 import { useDispatch, useSelector } from "react-redux";
 import {
   AutoCompleteSearchDataProps,
-  SuggestionListItemProps,
+  cardListItemProps,
   AuthorDataProps,
 } from "../types";
 
-const ExperiencedComponent: React.FC = () => {
+const AutoCompleteSearch: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [suggestions, setSuggestions] = useState<AutoCompleteSearchDataProps[]>(
     []
   );
-  const [selectedItem, setSelectedItem] = useState<SuggestionListItemProps>({});
-  const [isDisabled, setIsDisabled] = useState(true);
-
-  const [cardItem, setCardItem] = useState<SuggestionListItemProps[]>([]);
+  const [selectedItem, setSelectedItem] = useState<cardListItemProps | null>(
+    null
+  );
+  const [cardItem, setCardItem] = useState<cardListItemProps[]>([]);
   const { data, FetchApi } = useFetchInstance();
   const dispatch = useDispatch();
   const { payload } = useSelector((state) => state.search);
@@ -73,6 +73,7 @@ const ExperiencedComponent: React.FC = () => {
     )[0].author;
 
     setSelectedItem({
+      id: id,
       book_title: book_title,
       book_summary: book_Summary,
       book_author: boook_author,
@@ -80,29 +81,32 @@ const ExperiencedComponent: React.FC = () => {
   };
 
   const handleButtonClick = (): void => {
-    const { book_author, book_summary, book_title } = selectedItem;
-    setCardItem((prevItems) => [
-      ...prevItems,
-      {
-        book_title: book_title,
-        book_summary: book_summary,
-        book_author: book_author,
-      },
-    ]);
-    setSuggestions([]);
-    setSelectedItem({});
+    if (selectedItem) {
+      const { id, book_author, book_summary, book_title } = selectedItem;
+      setCardItem((prevItems) => [
+        ...prevItems,
+        {
+          id: id,
+          book_title: book_title,
+          book_summary: book_summary,
+          book_author: book_author,
+        },
+      ]);
+      setSuggestions([]);
+      setSelectedItem(null);
+    }
   };
- 
+
   return (
     <div className="experienced-component">
       <div className="grid-container">
-        {cardItem?.map((item: SuggestionListItemProps, index: number) => {
+        {cardItem?.map((item: cardListItemProps, index: number) => {
           return (
             <>
               <div className="card" key={index}>
-                {item.book_title}
+              <div style={{padding:'10px'}}><strong>{item.book_title}</strong></div>
                 <div>{item.book_summary}</div>
-                <div>{item.book_author}</div>
+                <div style={{padding:'10px'}}><strong>{item.book_author}</strong></div>
               </div>
             </>
           );
@@ -132,7 +136,7 @@ const ExperiencedComponent: React.FC = () => {
       <button
         className="action-button"
         onClick={handleButtonClick}
-        disabled={Object.keys(selectedItem).length === 0}
+        disabled={selectedItem ? Object.keys(selectedItem).length === 0 : true}
       >
         Submit
       </button>
@@ -140,4 +144,4 @@ const ExperiencedComponent: React.FC = () => {
   );
 };
 
-export default ExperiencedComponent;
+export default AutoCompleteSearch;

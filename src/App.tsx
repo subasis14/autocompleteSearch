@@ -1,12 +1,12 @@
 
 import './App.css'
-import ExperiencedComponent from './AutoCompleteSearch/AutocompleteSearch'
+import AutoCompleteSearch from './AutoCompleteSearch/AutocompleteSearch'
 
 function App() {
  
   return (
     <>
-      <ExperiencedComponent/>
+      <AutoCompleteSearch/>
     </>
   )
 }

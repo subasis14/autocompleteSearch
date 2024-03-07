@@ -8,7 +8,7 @@ Clone the project and run the following commands
     npm run ci-all
    ``` 
 
-    To run the Frontend
+   To run the Frontend
    ```
      npm run start
    ```

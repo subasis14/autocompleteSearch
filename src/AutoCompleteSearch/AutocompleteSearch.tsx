@@ -7,6 +7,7 @@ import {
   AutoCompleteSearchDataProps,
   cardListItemProps,
   AuthorDataProps,
+  RootState
 } from "../types";
 
 const AutoCompleteSearch: React.FC = () => {
@@ -20,7 +21,7 @@ const AutoCompleteSearch: React.FC = () => {
   const [cardItem, setCardItem] = useState<cardListItemProps[]>([]);
   const { data, FetchApi } = useFetchInstance();
   const dispatch = useDispatch();
-  const { payload } = useSelector((state) => state.search);
+  const { payload } = useSelector((state:RootState) => state.search);
 
   const fetchSearchData = () => {
     FetchApi("http://localhost:3001/fetchData");
@@ -64,7 +65,7 @@ const AutoCompleteSearch: React.FC = () => {
     }
   };
 
-  const handleSuggestionSelect = (id: string, summary: string): void => {
+  const handleSuggestionSelect = (id: number, summary: string): void => {
     const book_title = summary.split(":")[0];
     const book_Summary = summary.split(":")[1];
 

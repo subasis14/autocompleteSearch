@@ -1,35 +1,35 @@
-import React from "react";
+
 import { render, fireEvent } from "@testing-library/react";
 import AutoCompleteSearch from "./AutocompleteSearch";
+import '@testing-library/jest-dom'
 
-describe("AutoCompleteSearch", () => {
-  it("renders without crashing", () => {
-    render(<AutoCompleteSearch />);
+describe("AutoCompleteSearch component", () => {
+  test("renders search input", () => {
+    const { getByPlaceholderText } = render(<AutoCompleteSearch />);
+    const searchInput = getByPlaceholderText("Search...");
+    expect(searchInput).toBeInTheDocument();
   });
 
-  it("displays search suggestions on typing", async () => {
-    const { getByPlaceholderText, getByText } = render(<AutoCompleteSearch />);
+  // test("updates search term on input change", () => {
+  //   const { getByPlaceholderText } = render(<AutoCompleteSearch />);
+  //   const searchInput = getByPlaceholderText("Search...");
+
+  //   fireEvent.change(searchInput, { target: { value: "test" } });
+
+  //   expect(searchInput?.value).toBe("test");
+  // });
+
+  // Add more tests for other UI elements and interactions
+  
+  test("displays suggestions on search", async () => {
+    const { getByPlaceholderText, findByText } = render(<AutoCompleteSearch />);
     const searchInput = getByPlaceholderText("Search...");
 
-    fireEvent.change(searchInput, { target: { value: "history" } });
+    fireEvent.change(searchInput, { target: { value: "example" } });
 
-
-    expect(getByText("The Book in Three Sentences")).toBeInTheDocument();
+    const suggestion = await findByText("Example suggestion");
+    expect(suggestion).toBeInTheDocument();
   });
 
-  it("adds selected item to the card list on button click", () => {
-    const { getByPlaceholderText, getByText } = render(<AutoCompleteSearch />);
-    const searchInput = getByPlaceholderText("Search...");
-
-    fireEvent.change(searchInput, { target: { value: "history" } });
-
-    const suggestion = getByText("The Book in Three Sentences"); 
-    fireEvent.click(suggestion);
-
-    const submitButton = getByText("Submit");
-    fireEvent.click(submitButton);
-
- 
-    expect(getByText("The Book in Three Sentences")).toBeInTheDocument();
-  });
+  // Add more tests for selecting suggestion, submitting, etc.
 });

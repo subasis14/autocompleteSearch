@@ -7,10 +7,20 @@ Clone the project and run the following commands
    ```
     npm run ci-all
    ``` 
-   To run the Frontend and backend both
+   
+    To run the Frontend
    ```
      npm run start
    ```
+
+   To run the Backend Server.
+   ```
+     cd Server
+   ```
+   ```
+     npm run start
+   ```
+  
    Url to open the app
 
    ```

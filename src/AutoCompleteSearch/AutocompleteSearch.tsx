@@ -43,7 +43,9 @@ const AutoCompleteSearch: React.FC = () => {
         suggestion?.summary.toLowerCase().includes(searchTerm.toLowerCase())
       );
 
-    const sortedResults = filteredSuggestions.sort((a, b) => {
+      const uniqueSuggestions = filteredSuggestions.filter(suggestion => !cardItem?.some(item => item.id === suggestion.id));
+
+    const sortedResults = uniqueSuggestions.sort((a, b) => {
       const indexA = a.summary.indexOf(searchTerm);
       const indexB = b.summary.indexOf(searchTerm);
       return indexB - indexA;

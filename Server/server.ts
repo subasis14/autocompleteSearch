@@ -3,8 +3,12 @@
 const express = require('express');
 const http=require('http')
 const app = express();
+const cors = require('cors')
 const PORT =  3001;
 const httpServer=http.createServer(app)
+
+
+app.use(cors())
 app.use('/fetchData',require('./routes/api/data'));
 
 

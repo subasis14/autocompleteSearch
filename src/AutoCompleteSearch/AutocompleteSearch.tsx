@@ -1,49 +1,107 @@
-import React, { useState } from 'react';
-import './styles.css'
+import React, { useState, useEffect } from "react";
+import "./styles.css";
+import { useFetchInstance } from "../hooks/useFetchInstance";
+import { searchData } from "../State/SearchSlice";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  AutoCompleteSearchDataProps,
+  SuggestionListItemProps,
+  AuthorDataProps,
+} from "../types";
+
 const ExperiencedComponent: React.FC = () => {
-  const [searchTerm, setSearchTerm] = useState<string>('');
-  const [suggestions, setSuggestions] = useState<string[]>([]);
-  const [selectedItem, setSelectedItem] = useState<string | null>(null);
-console.log(selectedItem)
-  // Function to fetch suggestions based on the search term
-  const fetchSuggestions = async (searchTerm: string): Promise<void> => {
-    // Implement your fetching logic here (e.g., fetching from an API)
-    // For demonstration purposes, this function returns a hardcoded array
-    const mockSuggestions: string[] = ['JavaScript', 'React', 'Node.js', 'Express.js', 'MongoDB', 'Redux'];
+  const [searchTerm, setSearchTerm] = useState<string>("");
+  const [suggestions, setSuggestions] = useState<AutoCompleteSearchDataProps[]>(
+    []
+  );
+  const [selectedItem, setSelectedItem] = useState<SuggestionListItemProps[]>(
+    []
+  );
+  const { data, FetchApi } = useFetchInstance();
+  const dispatch = useDispatch();
+  const { payload } = useSelector((state) => state.search);
 
-    // Simulate an asynchronous delay (e.g., API request)
-    await new Promise(resolve => setTimeout(resolve, 1000));
-
-    // Filter suggestions based on the search term
-    const filteredSuggestions: string[] = mockSuggestions.filter(suggestion =>
-      suggestion.toLowerCase().includes(searchTerm.toLowerCase())
-    );
-
-    setSuggestions(filteredSuggestions);
+  const fetchSearchData = () => {
+    FetchApi("http://localhost:3001/fetchData");
   };
 
-  // Function to handle search term change
-  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
+  useEffect(() => {
+    fetchSearchData();
+  }, []);
+
+  useEffect(() => {
+    if (data) dispatch(searchData(data));
+  }, [data]);
+
+  const fetchSuggestions = (searchTerm: string) => {
+    console.log(payload?.summaries);
+    const mockSuggestions: AutoCompleteSearchDataProps[] = payload?.summaries;
+
+    const filteredSuggestions: AutoCompleteSearchDataProps[] =
+      mockSuggestions.filter((suggestion) =>
+        suggestion?.summary.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+
+    const sortedResults = filteredSuggestions.sort((a, b) => {
+      const indexA = a.summary.indexOf(searchTerm);
+      const indexB = b.summary.indexOf(searchTerm);
+      return indexB - indexA;
+    });
+    setSuggestions(sortedResults);
+  };
+
+  const handleSearchChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ): void => {
     const { value } = event.target;
-    setSearchTerm(value);
-    fetchSuggestions(value);
+
+    if (value.trim()) {
+      setSearchTerm(value);
+      fetchSuggestions(value);
+    } else {
+      setSearchTerm("");
+      setSuggestions([]);
+    }
   };
 
-  // Function to handle suggestion selection
-  const handleSuggestionSelect = (suggestion: string): void => {
-    setSelectedItem(suggestion);
-    setSearchTerm('');
+  const handleSuggestionSelect = (id: string, summary: string): void => {
+    const book_title = summary.split(":")[0];
+    const book_Summary = summary.split(":")[1];
+
+    const boook_author = payload.authors.filter(
+      (item: AuthorDataProps) => item.book_id === id
+    )[0].author;
+
+    setSelectedItem((prevItems) => [
+      ...prevItems,
+      {
+        book_title: book_title,
+        book_summary: book_Summary,
+        book_author: boook_author,
+      },
+    ]);
     setSuggestions([]);
   };
 
-  // Function to handle button click
   const handleButtonClick = (): void => {
-    // Implement button click logic here
-    console.log('Button clicked!');
+    console.log("Button clicked!");
   };
 
   return (
     <div className="experienced-component">
+      <div className="grid-container">
+        {selectedItem?.map((item: SuggestionListItemProps) => {
+          return (
+            <>
+              <div className="card">
+                {item.book_title}
+                <div>{item.book_summary}</div>
+                <div>{item.book_author}</div>
+              </div>
+            </>
+          );
+        })}
+      </div>
       <input
         type="text"
         className="search-input"
@@ -52,14 +110,21 @@ console.log(selectedItem)
         onChange={handleSearchChange}
       />
       <ul className="suggestions-list">
-        {suggestions.map((suggestion: string, index: number) => (
-          <li key={index} onClick={() => handleSuggestionSelect(suggestion)}>
-            {suggestion}
-          </li>
-        ))}
+        {suggestions.map(
+          (suggestion: AutoCompleteSearchDataProps, index: number) => (
+            <li
+              key={index}
+              onClick={() =>
+                handleSuggestionSelect(suggestion.id, suggestion.summary)
+              }
+            >
+              {suggestion.summary}
+            </li>
+          )
+        )}
       </ul>
       <button className="action-button" onClick={handleButtonClick}>
-        Action
+        Submit
       </button>
     </div>
   );
